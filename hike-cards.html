@@ -38,9 +38,9 @@ class HikeCards extends HTMLElement {
       try { data = JSON.parse(raw); } catch(e){ data = []; }
     }
 
-    this.innerHTML = `
+    this.innerHTML = 
       <div class="wrap">
-        ${data.map(i => `
+        ${data.map(i => 
           <div class="card">
             <div class="bg" style="background-image:url('${i.image || ""}')"></div>
             <div class="title">${i.title || ""}</div>
@@ -50,9 +50,9 @@ class HikeCards extends HTMLElement {
               <div>${i.duration || ""}</div>
             </div>
           </div>
-        `).join("")}
+        ).join("")}
       </div>
-    `;
+    ;
   }
 }
 customElements.define("hike-cards", hike-cards);
@@ -60,3 +60,4 @@ customElements.define("hike-cards", hike-cards);
 
 </body>
 </html>
+

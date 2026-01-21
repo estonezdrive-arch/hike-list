@@ -40,8 +40,8 @@ class HikeCards extends HTMLElement {
     }
 
     _render() {
-        // 1. Shadow DOM Styles
-        this.shadowRoot.innerHTML = 
+        // We use backticks (`) to put the CSS inside a Javascript string
+        this.shadowRoot.innerHTML = `
         <style>
             :host { 
                 display: block; 
@@ -89,7 +89,6 @@ class HikeCards extends HTMLElement {
             }
             .card:hover .bg { transform: scale(1.05); }
 
-            /* Title Pill (Top) */
             .titlePill {
                 position: absolute;
                 top: 16px; left: 16px; right: 16px;
@@ -103,7 +102,6 @@ class HikeCards extends HTMLElement {
                 backdrop-filter: blur(4px);
             }
 
-            /* Stats Pill (Bottom) */
             .statsPill {
                 position: absolute;
                 bottom: 16px; left: 16px; right: 16px;
@@ -119,7 +117,7 @@ class HikeCards extends HTMLElement {
             }
         </style>
         <div class="wrap" id="wrap"></div>
-        ;
+        `;
 
         const wrap = this.shadowRoot.getElementById("wrap");
         const items = (this._items || []).slice(0, 50);
@@ -130,7 +128,6 @@ class HikeCards extends HTMLElement {
             
             // Handle Click
             card.onclick = () => {
-                // Dispatch event for Velo to handle navigation
                 this.dispatchEvent(new CustomEvent('cardClick', { 
                     detail: { url: it.url || '' },
                     bubbles: true,
@@ -138,25 +135,21 @@ class HikeCards extends HTMLElement {
                 }));
             };
 
-            // Background Image
             const bg = document.createElement("div");
             bg.className = "bg";
-            // Ensure we handle missing images gracefully
             bg.style.backgroundImage = it.image ? `url("${it.image}")` : `background: #ccc`;
 
-            // Title
             const title = document.createElement("div");
             title.className = "titlePill";
             title.textContent = it.title || "Untitled";
 
-            // Stats
             const stats = document.createElement("div");
             stats.className = "statsPill";
-            stats.innerHTML = 
+            stats.innerHTML = `
                 <span>${it.difficulty || '-'}</span>
                 <span>${it.distance || '-'}</span>
                 <span>${it.duration || '-'}</span>
-            ;
+            `;
 
             card.appendChild(bg);
             card.appendChild(title);

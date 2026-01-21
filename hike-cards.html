@@ -29,24 +29,23 @@ body{margin:0;font-family:system-ui}
 
 <script>
 class HikeCards extends HTMLElement {
-  static get observedAttributes(){ return ["items"]; }
+  static get observedAttributes() { return ["items"]; }
 
-  connectedCallback(){ this.render(); }
+  connectedCallback() { this.render(); }
+  attributeChangedCallback() { this.render(); }
 
-  attributeChangedCallback(){ this.render(); }
-
-  render(){
+  render() {
     const wrap = document.getElementById("wrap");
-    if(!wrap) return;
+    if (!wrap) return;
 
     let data = [];
     const raw = this.getAttribute("items");
-    if(raw){
-      try { data = JSON.parse(raw); } catch(e){ data = []; }
+    if (raw) {
+      try { data = JSON.parse(raw); } catch(e) { data = []; }
     }
 
     wrap.innerHTML = "";
-    data.forEach(i=>{
+    data.forEach(i => {
       wrap.innerHTML += `
         <div class="card">
           <div class="bg" style="background-image:url('${i.image || ""}')"></div>
@@ -63,7 +62,9 @@ class HikeCards extends HTMLElement {
 customElements.define("hike-cards", HikeCards);
 </script>
 
+
 <hike-cards></hike-cards>
 </body>
 </html>
+
 

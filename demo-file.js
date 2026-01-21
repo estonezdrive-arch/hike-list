@@ -3,7 +3,7 @@ class DemoBox extends HTMLElement {
     super();
     this.attachShadow({ mode: "open" });
 
-    this.shadowRoot.innerHTML = 
+    this.shadowRoot.innerHTML = `
       <style>
         :host { display:block; }
         .box{
@@ -18,10 +18,10 @@ class DemoBox extends HTMLElement {
       </style>
 
       <div class="box">
-        ✅ Custom Element loaded from GitHub!
+        ✅ Custom Element loaded!
         <div class="small" id="time"></div>
       </div>
-    ;
+    `;
   }
 
   connectedCallback() {

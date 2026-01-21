@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hike Cards</title>
+  <style>
+    :root{
+      --gap: 28px;
+      --card-radius: 28px;
+      --pill-radius: 999px;
+      --pill-bg: rgba(170, 170, 170, 0.55);
+      --pill-bg-strong: rgba(120, 120, 120, 0.65);
+      --text: #fff;
+      --shadow: 0 16px 40px rgba(0,0,0,0.18);
+      --font: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: transparent;
+      font-family: var(--font);
+    }
+
+    hike-cards {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <hike-cards></hike-cards>
+
+  <script>
+    class HikeCards extends HTMLElement {
+      static get observedAttributes() {
+        return ["items", "columns", "card-height"];
+      }
+
+      constructor() {
+        super();
+        this.attachShadow({ mode: "open" });
+        this._items = [];
+        this._columns = 3;
+        this._cardHeight = 420;
+
+        this.shadowRoot.innerHTML = `
+          <style>
+            :host{ display:block; height:100%; width:100%; }
+            .wrap{
+              height:100%;
+              width:100%;
+              display:flex;
+              gap: var(--gap);
+              align-items: stretch;
+              justify-content: center;
+              padding: 10px;
+              box-sizing: border-box;
+            }
+
+            /* Responsive wrap */
+            @media (max-width: 980px){
+              .wrap{ flex-wrap: wrap; justify-content: center; }
+              .card{ width: min(360px, 100%); }
+            }
+
+            .card{
+              position: relative;
+              width: 310px;
+              height: var(--card-h, 420px);
+              border-radius: var(--card-radius);
+              overflow: hidden;
+              box-shadow: var(--shadow);
+              background: #ddd;
+              flex: 0 0 auto;
+            }
+
+            .bg{
+              position:absolute;
+              inset:0;
+              background-size: cover;
+              background-position: center;
+              transform: scale(1.02);
+            }
+
+            .titlePill{
+              position:absolute;
+              top: 18px;
+              left: 18px;
+              right: 18px;
+              height: 44px;
+              border-radius: var(--pill-radius);
+              background: var(--pill-bg-strong);
+              display:flex;
+              align-items:center;
+              justify-content:center;
+              color: var(--text);
+              font-weight: 650;
+              letter-spacing: 0.2px;
+              font-size: 22px;
+              text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+              backdrop-filter: blur(6px);
+              -webkit-backdrop-filter: blur(6px);
+              padding: 0 18px;
+              box-sizing: border-box;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .statsPill{
+              position:absolute;
+              bottom: 18px;
+              left: 18px;
+              right: 18px;
+              height: 52px;
+              border-radius: var(--pill-radius);
+              background: var(--pill-bg);
+              display:flex;
+              align-items:center;
+              justify-content: space-between;
+              gap: 16px;
+              padding: 0 18px;
+              box-sizing: border-box;
+              color: rgba(0,0,0,0.75);
+              font-weight: 520;
+              backdrop-filter: blur(6px);
+              -webkit-backdrop-filter: blur(6px);
+            }
+
+            .stat{
+              flex: 1 1 0;
+              text-align:center;
+              font-size: 15px;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .stat:first-child{ text-align:left; }
+            .stat:last-child{ text-align:right; }
+
+            /* Optional click behavior */
+            .card[role="link"]{ cursor:pointer; }
+          </style>
+
+          <div class="wrap" id="wrap"></div>
+        `;
+      }
+
+      connectedCallback() {
+        this._readAttrs();
+        this._render();
+      }
+
+      attributeChangedCallback() {
+        this._readAttrs();
+        this._render();
+      }
+
+      set data(itemsArray) {
+        this._items = Array.isArray(itemsArray) ? itemsArray : [];
+        this._render();
+      }
+
+      _readAttrs() {
+        const cols = parseInt(this.getAttribute("columns"), 10);
+        this._columns = Number.isFinite(cols) && cols > 0 ? cols : 3;
+
+        const ch = parseInt(this.getAttribute("card-height"), 10);
+        this._cardHeight = Number.isFinite(ch) && ch > 200 ? ch : 420;
+
+        const raw = this.getAttribute("items");
+        if (raw) {
+          try {
+            const parsed = JSON.parse(raw);
+            this._items = Array.isArray(parsed) ? parsed : [];
+          } catch {
+            // ignore bad json
+          }
+        }
+      }
+
+      _render() {
+        const wrap = this.shadowRoot.getElementById("wrap");
+        if (!wrap) return;
+
+        wrap.style.setProperty("--card-h", `${this._cardHeight}px`);
+        wrap.innerHTML = "";
+
+        const items = (this._items || []).slice(0, 50);
+
+        // If you want exact 3-across spacing like the screenshot, keep flex + fixed width.
+        // If you want true column control, you can switch to CSS grid, but flex matches the mock.
+        items.forEach((it) => {
+          const title = it.title ?? "";
+          const image = it.image ?? "";
+          const difficulty = it.difficulty ?? "";
+          const distance = it.distance ?? "";
+          const duration = it.duration ?? "";
+          const url = it.url ?? "";
+
+          const card = document.createElement("div");
+          card.className = "card";
+
+          if (url) {
+            card.setAttribute("role", "link");
+            card.tabIndex = 0;
+            card.addEventListener("click", () => {
+              // send event to Wix (optional)
+              this.dispatchEvent(new CustomEvent("cardClick", { detail: { url, item: it } }));
+              // fallback navigation inside iframe:
+              window.open(url, "_top");
+            });
+            card.addEventListener("keydown", (e) => {
+              if (e.key === "Enter" || e.key === " ") card.click();
+            });
+          }
+
+          const bg = document.createElement("div");
+          bg.className = "bg";
+          bg.style.backgroundImage = image ? `url("${image}")` : "none";
+
+          const titlePill = document.createElement("div");
+          titlePill.className = "titlePill";
+          titlePill.textContent = title;
+
+          const stats = document.createElement("div");
+          stats.className = "statsPill";
+
+          const s1 = document.createElement("div");
+          s1.className = "stat";
+          s1.textContent = difficulty;
+
+          const s2 = document.createElement("div");
+          s2.className = "stat";
+          s2.textContent = distance;
+
+          const s3 = document.createElement("div");
+          s3.className = "stat";
+          s3.textContent = duration;
+
+          stats.appendChild(s1);
+          stats.appendChild(s2);
+          stats.appendChild(s3);
+
+          card.appendChild(bg);
+          card.appendChild(titlePill);
+          card.appendChild(stats);
+          wrap.appendChild(card);
+        });
+      }
+    }
+
+    customElements.define("hike-cards", HikeCards);
+  </script>
+</body>
+</html>

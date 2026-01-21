@@ -29,26 +29,41 @@ body{margin:0;font-family:system-ui}
 
 <script>
 class HikeCards extends HTMLElement {
-  set items(data){
-    const wrap=document.getElementById("wrap");
-    wrap.innerHTML="";
+  static get observedAttributes(){ return ["items"]; }
+
+  connectedCallback(){ this.render(); }
+
+  attributeChangedCallback(){ this.render(); }
+
+  render(){
+    const wrap = document.getElementById("wrap");
+    if(!wrap) return;
+
+    let data = [];
+    const raw = this.getAttribute("items");
+    if(raw){
+      try { data = JSON.parse(raw); } catch(e){ data = []; }
+    }
+
+    wrap.innerHTML = "";
     data.forEach(i=>{
-      wrap.innerHTML+=`
+      wrap.innerHTML += `
         <div class="card">
-          <div class="bg" style="background-image:url('${i.image}')"></div>
-          <div class="title">${i.title}</div>
+          <div class="bg" style="background-image:url('${i.image || ""}')"></div>
+          <div class="title">${i.title || ""}</div>
           <div class="stats">
-            <div>${i.difficulty}</div>
-            <div>${i.distance}</div>
-            <div>${i.duration}</div>
+            <div>${i.difficulty || ""}</div>
+            <div>${i.distance || ""}</div>
+            <div>${i.duration || ""}</div>
           </div>
         </div>`;
     });
   }
 }
-customElements.define("hike-cards",HikeCards);
+customElements.define("hike-cards", HikeCards);
 </script>
 
 <hike-cards></hike-cards>
 </body>
 </html>
+

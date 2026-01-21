@@ -1,0 +1,156 @@
+<div class="hike-wrap">
+  <div class="hike-grid">
+
+    <a class="hike-card" href="#" aria-label="Aura Force hike">
+      <img class="hike-img" src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1200&q=80" alt="Aura Force waterfall and hills" />
+      <div class="hike-shade"></div>
+
+      <div class="hike-top-pill">Aura Force</div>
+
+      <div class="hike-bottom-pill">
+        <div class="hike-stat left">Moderate</div>
+        <div class="hike-stat mid">5.0 km</div>
+        <div class="hike-stat right">2–3 hrs</div>
+      </div>
+    </a>
+
+    <a class="hike-card" href="#" aria-label="Deliv Elbow hike">
+      <img class="hike-img" src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80" alt="Green valley and mountain" />
+      <div class="hike-shade"></div>
+
+      <div class="hike-top-pill">Deliv Elbow</div>
+
+      <div class="hike-bottom-pill">
+        <div class="hike-stat left">Hard</div>
+        <div class="hike-stat mid">12.0 km</div>
+        <div class="hike-stat right">5–7 hrs</div>
+      </div>
+    </a>
+
+    <a class="hike-card" href="#" aria-label="Scafell Pike hike">
+      <img class="hike-img" src="https://images.unsplash.com/photo-1520962917960-2d3a8f81a7b2?auto=format&fit=crop&w=1200&q=80" alt="Rocky mountain landscape" />
+      <div class="hike-shade"></div>
+
+      <div class="hike-top-pill">Scafell Pike</div>
+
+      <div class="hike-bottom-pill">
+        <div class="hike-stat left">Very hard</div>
+        <div class="hike-stat mid">14.5 km</div>
+        <div class="hike-stat right">6–9 hrs</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<style>
+  .hike-wrap{
+    padding: 18px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .hike-grid{
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+    align-items: stretch;
+  }
+
+  .hike-card{
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    min-height: 420px;
+    box-shadow: 0 14px 30px rgba(0,0,0,.18);
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: #e5e7eb;
+  }
+
+  .hike-img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transform: scale(1.02);
+  }
+
+  .hike-shade{
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,.10),
+      rgba(0,0,0,.05) 35%,
+      rgba(0,0,0,.10)
+    );
+    pointer-events: none;
+  }
+
+  .hike-top-pill{
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 18px;
+    height: 48px;
+    border-radius: 999px;
+    background: rgba(40, 66, 92, .55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 650;
+    font-size: 20px;
+    letter-spacing: .2px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    text-shadow: 0 1px 2px rgba(0,0,0,.25);
+    padding: 0 18px;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hike-bottom-pill{
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+    height: 54px;
+    border-radius: 999px;
+    background: rgba(156, 156, 156, .75);
+    color: #1f2937;
+    display: grid;
+    grid-template-columns: 1.2fr .9fr .9fr;
+    align-items: center;
+    padding: 0 12px;
+    box-sizing: border-box;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .hike-stat{
+    font-size: 15px;
+    font-weight: 550;
+    opacity: .95;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .hike-stat.left{ justify-content: flex-start; padding-left: 6px; }
+  .hike-stat.right{ justify-content: flex-end; padding-right: 6px; }
+
+  /* Responsive */
+  @media (max-width: 980px){
+    .hike-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px){
+    .hike-wrap{ padding: 12px; }
+    .hike-grid{ grid-template-columns: 1fr; }
+    .hike-card{ min-height: 460px; }
+  }
+</style>

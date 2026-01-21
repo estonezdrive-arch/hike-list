@@ -4,10 +4,7 @@
 <style>
 body{margin:0;font-family:system-ui}
 .wrap{display:flex;gap:24px}
-.card{
-  width:300px;height:420px;border-radius:28px;
-  overflow:hidden;position:relative
-}
+.card{width:300px;height:420px;border-radius:28px;overflow:hidden;position:relative}
 .bg{position:absolute;inset:0;background-size:cover;background-position:center}
 .title{
   position:absolute;top:16px;left:16px;right:16px;
@@ -25,46 +22,41 @@ body{margin:0;font-family:system-ui}
 </head>
 <body>
 
-<div class="wrap" id="wrap"></div>
+<hike-cards></hike-cards>
 
 <script>
 class HikeCards extends HTMLElement {
-  static get observedAttributes() { return ["items"]; }
+  static get observedAttributes(){ return ["items"]; }
 
-  connectedCallback() { this.render(); }
-  attributeChangedCallback() { this.render(); }
+  connectedCallback(){ this.render(); }
+  attributeChangedCallback(){ this.render(); }
 
-  render() {
-    const wrap = document.getElementById("wrap");
-    if (!wrap) return;
-
+  render(){
     let data = [];
     const raw = this.getAttribute("items");
-    if (raw) {
-      try { data = JSON.parse(raw); } catch(e) { data = []; }
+    if(raw){
+      try { data = JSON.parse(raw); } catch(e){ data = []; }
     }
 
-    wrap.innerHTML = "";
-    data.forEach(i => {
-      wrap.innerHTML += `
-        <div class="card">
-          <div class="bg" style="background-image:url('${i.image || ""}')"></div>
-          <div class="title">${i.title || ""}</div>
-          <div class="stats">
-            <div>${i.difficulty || ""}</div>
-            <div>${i.distance || ""}</div>
-            <div>${i.duration || ""}</div>
+    this.innerHTML = `
+      <div class="wrap">
+        ${data.map(i => `
+          <div class="card">
+            <div class="bg" style="background-image:url('${i.image || ""}')"></div>
+            <div class="title">${i.title || ""}</div>
+            <div class="stats">
+              <div>${i.difficulty || ""}</div>
+              <div>${i.distance || ""}</div>
+              <div>${i.duration || ""}</div>
+            </div>
           </div>
-        </div>`;
-    });
+        `).join("")}
+      </div>
+    `;
   }
 }
-customElements.define("hike-cards", HikeCards);
+customElements.define("hike-cards", hike-cards);
 </script>
 
-
-<hike-cards></hike-cards>
 </body>
 </html>
-
-
